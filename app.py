@@ -6,14 +6,34 @@ from PIL import Image
 import io
 import matplotlib.pyplot as plt
 import pandas as pd
+import gdown
+
+# Function to download file from Google Drive using gdown
+def download_file_from_google_drive(file_id, destination):
+    URL = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(URL, destination, quiet=False)
 
 # Cache model loading with st.cache_resource
 @st.cache_resource
 def load_models():
+    # Define file IDs and destinations
+    model_files = {
+        "strawberry_disease_classification_model_a.keras": "1T1yv4bCf2dONLppiCjWq4dFdOiS4tYSm",
+        "strawberry_disease_classification_model_b.keras": "1DFQOvk5QkH7BxScetYe4gMvRa49MN833",
+        "strawberry_disease_classification_model_c.keras": "1htLnAC6mGKjEjTBjzg8Zy1onKtNVdOar",
+        "strawberry_disease_classification_model_d.keras": "18SuJ31JlJUbbJhz9DzDwvK08zuHQ4gRR"
+    }
+
+    # Download model files
+    for filename, file_id in model_files.items():
+        download_file_from_google_drive(file_id, filename)
+    
+    # Load models
     model_a = load_model("strawberry_disease_classification_model_a.keras")
     model_b = load_model("strawberry_disease_classification_model_b.keras")
     model_c = load_model("strawberry_disease_classification_model_c.keras")
     model_d = load_model("strawberry_disease_classification_model_d.keras")
+    
     return model_a, model_b, model_c, model_d
 
 model_a, model_b, model_c, model_d = load_models()
